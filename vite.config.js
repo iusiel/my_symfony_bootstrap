@@ -17,7 +17,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 app: "./assets/app.js",
-                theme: "./assets/styles/app.scss",
+                theme: "./assets/styles/app.css",
             },
         },
     },
