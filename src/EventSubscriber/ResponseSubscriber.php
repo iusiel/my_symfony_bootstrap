@@ -2,11 +2,19 @@
 
 namespace App\EventSubscriber;
 
+use App\Services\Nonce;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class ResponseSubscriber implements EventSubscriberInterface
 {
+    private $nonce;
+
+    public function __construct(Nonce $nonce)
+    {
+        $this->nonce = $nonce;
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [ResponseEvent::class => "onKernelResponse"];
@@ -52,14 +60,18 @@ class ResponseSubscriber implements EventSubscriberInterface
         $defaultSrc = ["'self'"];
         $csp[] = "default-src " . implode(" ", $defaultSrc);
 
-        $scriptSrc = ["'self'", "'strict-dynamic'", "127.0.0.1:5173"];
+        $scriptSrc = [
+            "'self'",
+            "'strict-dynamic'",
+            "'nonce-" . $this->nonce->generate() . "'",
+        ];
         $csp[] = "script-src " . implode(" ", $scriptSrc);
 
         $styleSrc = ["'self'", "'unsafe-inline'", "127.0.0.1:5173", "*:5173"];
         $csp[] = "style-src " . implode(" ", $styleSrc);
 
-        $coonectSrc = ["'self'", "ws:"];
-        $csp[] = "connect-src " . implode(" ", $coonectSrc);
+        $connectSrc = ["'self'", "ws:"];
+        $csp[] = "connect-src " . implode(" ", $connectSrc);
 
         return implode("; ", $csp);
     }

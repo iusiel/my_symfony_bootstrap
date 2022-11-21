@@ -1,6 +1,10 @@
 twig:
     default_path: "%kernel.project_dir%/templates"
 
+    globals:
+        # the value is the service's id
+        nonce: '@App\Services\Nonce'
+
 when@test:
     twig:
         strict_variables: true

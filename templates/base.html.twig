@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-            {{ vite_entry_link_tags('theme') }}
-        {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        {{ vite_entry_link_tags('theme') }}
+    {% endblock %}
+</head>
+<body>
+    {% block body %}{% endblock %}
 
-    </head>
-    <body>
-        {% block body %}{% endblock %}
 
-
-        {% block javascripts %}
-            {{ vite_entry_script_tags('theme') }}
-            {{ vite_entry_script_tags("app") }}
-        {% endblock %}
-    </body>
+    {% block javascripts %}
+        {{ vite_entry_script_tags('theme')|replace({"<script": "<script nonce=\"" ~ nonce.generate ~ "\"" }) | raw }}
+        {{ vite_entry_script_tags("app")|replace({"<script": "<script nonce=\"" ~ nonce.generate ~ "\"" }) | raw }}
+    {% endblock %}
+</body>
 </html>
+
+
