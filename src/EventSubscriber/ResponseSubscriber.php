@@ -41,7 +41,26 @@ class ResponseSubscriber implements EventSubscriberInterface
         );
         $response->headers->set(
             "Content-Security-Policy",
-            "default-src 'self'; script-src 'self' "
+            $this->generateCSP()
         );
+    }
+
+    private function generateCSP()
+    {
+        $csp = [];
+
+        $defaultSrc = ["'self'"];
+        $csp[] = "default-src " . implode(" ", $defaultSrc);
+
+        $scriptSrc = ["'self'", "'strict-dynamic'", "127.0.0.1:5173"];
+        $csp[] = "script-src " . implode(" ", $scriptSrc);
+
+        $styleSrc = ["'self'", "'unsafe-inline'", "127.0.0.1:5173", "*:5173"];
+        $csp[] = "style-src " . implode(" ", $styleSrc);
+
+        $coonectSrc = ["'self'", "ws:"];
+        $csp[] = "connect-src " . implode(" ", $coonectSrc);
+
+        return implode("; ", $csp);
     }
 }
