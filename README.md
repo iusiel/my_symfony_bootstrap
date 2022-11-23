@@ -18,6 +18,6 @@ yarn install
 
 ## Some useful commands
 
-1. yarn encore dev --watch - compile css and js as defined in webpack.config.js. Auto-compiles files everytime there is a change in css or js files
-2. npm run test - run all vitest tests
-3. php bin/phpunit - run all phpunit tests
+1. npm run dev- compile css and js as defined in vite.config.js. Auto-compiles files everytime there is a change in css or js files
+1. npm run vitest - run all vitest tests
+1. php bin/phpunit - run all phpunit tests
