@@ -1,0 +1,8 @@
+import { render, fireEvent } from "@testing-library/vue";
+import {{ ComponentName }} from "{{ ComponentPath }}";
+
+test("it loads properly", async () => {
+    // The render method returns a collection of utilities to query your component.
+    const { getByText } = render({{ ComponentName }});
+    getByText("Some text present in your component");
+});
