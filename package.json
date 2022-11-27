@@ -25,7 +25,9 @@
         "dev": "vite",
         "build": "vite build",
         "vitest": "vitest",
-        "vitest:coverage": "vitest run --coverage"
+        "vitest:coverage": "vitest run --coverage",
+        "cy:open": "cypress open",
+        "cy:run": "cypress run"
     },
     "dependencies": {
         "vue": "^3.2.31",

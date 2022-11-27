@@ -1,0 +1,1 @@
+put your cypress tests inside this folder

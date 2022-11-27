@@ -1,0 +1,9 @@
+describe("{{ routeName }} Basic Spec", () => {
+    it("Page loads", () => {
+        cy.visit("{{ route }}");
+    });
+
+    it("Text is present on page ", () => {
+        cy.findByText("Some text");
+    });
+});

@@ -6,6 +6,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // the name of the command is what users type after "php bin/console"
 #[
@@ -17,6 +18,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 ]
 class MakeTestForRoutes extends Command
 {
+    public function __construct(private UrlGeneratorInterface $router)
+    {
+        parent::__construct();
+    }
+
     protected function execute(
         InputInterface $input,
         OutputInterface $output
@@ -31,7 +37,6 @@ class MakeTestForRoutes extends Command
 
         foreach ($routesOutput as $route) {
             $routeData = array_values(array_filter(explode(" ", $route)));
-
             if (empty($routeData)) {
                 continue;
             }
@@ -60,6 +65,8 @@ class MakeTestForRoutes extends Command
                         $stub
                     );
                 }
+
+                $this->generateCypressTest($path, $routeData[0]);
             }
 
             if (strpos($method, "POST") !== false) {
@@ -72,10 +79,7 @@ class MakeTestForRoutes extends Command
                     $stub = file_get_contents("stubs/phpunit-test.post.stub");
                     $stub = str_replace("{{ className }}", $className, $stub);
                     $stub = str_replace("{{ route }}", $path, $stub);
-                    file_put_contents(
-                        "tests/Generated/" . $className . ".php",
-                        $stub
-                    );
+                    file_put_contents($outputFile, $stub);
                 }
             }
         }
@@ -107,5 +111,25 @@ class MakeTestForRoutes extends Command
         }
 
         return true;
+    }
+
+    private function generateCypressTest(string $path, string $pathName): void
+    {
+        $className = mb_convert_case($pathName, MB_CASE_TITLE, "UTF-8");
+        $outputFile = "cypress/e2e/" . $className . ".cy.js";
+        if (!file_exists($outputFile)) {
+            $stub = file_get_contents("stubs/cypress.test.stub");
+            $stub = str_replace("{{ routeName }}", $path, $stub);
+            $stub = str_replace(
+                "{{ route }}",
+                $this->router->generate(
+                    $pathName,
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                $stub
+            );
+            file_put_contents($outputFile, $stub);
+        }
     }
 }
